@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BEKI AI | Advanced AI Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-twilight.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.17/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Gaming Browser Inspired CSS */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #15151e;
+            --bg-tertiary: #1e1e2d;
+            --accent-primary: #ff2a6d;
+            --accent-secondary: #05d9e8;
+            --accent-tertiary: #0059ff;
+            --accent-quaternary: #ffcc00;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8b8;
+            --text-muted: #6c6c7a;
+            --border-color: rgba(255, 42, 109, 0.2);
+            --success: #00ff9d;
+            --warning: #ffcc00;
+            --error: #ff2a6d;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --glow-effect: 0 0 20px rgba(255, 42, 109, 0.4);
+            --neon-glow: 0 0 10px rgba(5, 217, 232, 0.7);
+        }
+
+        .light-mode {
+            --bg-primary: #f0f0f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e6e6f0;
+            --accent-primary: #ff2a6d;
+            --accent-secondary: #05d9e8;
+            --accent-tertiary: #0059ff;
+            --accent-quaternary: #ffcc00;
+            --text-primary: #15151e;
+            --text-secondary: #4a4a5a;
+            --text-muted: #8a8a9a;
+            --border-color: rgba(255, 42, 109, 0.15);
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --glow-effect: 0 0 20px rgba(255, 42, 109, 0.2);
+            --neon-glow: 0 0 10px rgba(5, 217, 232, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255, 42, 109, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 85% 30%, rgba(5, 217, 232, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 80%, rgba(0, 89, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Sidebar with gaming style */
+        .sidebar {
+            width: 20rem;
+            min-width: 20rem;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            z-index: 10;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            z-index: 1;
+        }
+        
+        .sidebar.collapsed {
+            width: 0 !important;
+            min-width: 0 !important;
+            padding: 0 !important;
+            border-right: none !important;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            z-index: 2;
+            background-color: var(--bg-secondary);
+        }
+
+        .sidebar-content {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            position: relative;
+            z-index: 2;
+            background-color: var(--bg-secondary);
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        /* Header with gaming style */
+        .header {
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Message bubbles with gaming style */
+        .message {
+            display: flex;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, var(--accent-primary), #d1005e);
+            color: var(--text-primary);
+            border-radius: 18px 18px 0 18px;
+            box-shadow: var(--glow-effect);
+            order: 2;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .message.user .message-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+            z-index: 0;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .message.ai .message-bubble {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            border-radius: 18px 18px 18px 0;
+            border: 1px solid var(--border-color);
+            order: 2;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .message.ai .message-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-secondary), var(--accent-tertiary));
+        }
+
+        /* FIXED: Avatar styling for perfect image display */
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+            background-color: var(--accent-tertiary); 
+            color: white;
+            font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 10px rgba(0, 89, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* FIXED: User avatar with perfect image fitting */
+        .message.user .message-avatar {
+            margin-left: 0.75rem;
+            order: 3;
+            background: linear-gradient(135deg, var(--accent-primary), #d1005e);
+        }
+
+        .message.ai .message-avatar {
+            margin-right: 0.75rem;
+            order: 1;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+            color: white !important;
+        }
+
+        /* FIXED: Avatar image styling for perfect fit */
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .message-bubble {
+            max-width: 85%;
+            padding: 1rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .chat-input-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-secondary), transparent);
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0.5rem 1rem;
+            color: var(--text-primary);
+            resize: none;
+            min-height: 40px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.5rem;
+            margin: 0 0.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .action-btn:hover::before {
+            left: 100%;
+        }
+        
+        .action-btn:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(255, 42, 109, 0.3);
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--accent-primary), #d1005e);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            margin-right: 0;
+            margin-left: 0.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(255, 42, 109, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .send-btn:hover::before {
+            left: 100%;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 42, 109, 0.6);
+        }
+
+        /* Welcome Screen with gaming style */
+        .welcome-screen {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .welcome-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 42, 109, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(5, 217, 232, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(255, 42, 109, 0.5));
+        }
+
+        .prompt-suggestions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            max-width: 600px;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .prompt-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .prompt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .prompt-card:hover {
+            background-color: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-effect);
+            transform: translateY(-5px);
+        }
+        
+        .prompt-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Code Block Styling */
+        .message-bubble pre {
+            background-color: #15151e;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .message-bubble pre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-secondary), var(--accent-tertiary));
+        }
+        
+        .message-bubble code {
+            font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* Typing Indicator with gaming style */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 6px;
+            background-color: var(--bg-tertiary);
+            border-radius: 18px 18px 18px 0;
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border-color);
+            margin-left: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .typing-dots::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-secondary), var(--accent-tertiary));
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-secondary);
+            border-radius: 50%;
+            animation: bounce 0.8s infinite ease-in-out;
+            box-shadow: 0 0 5px rgba(5, 217, 232, 0.7);
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.1s;
+            background-color: var(--accent-tertiary);
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.2s;
+            background-color: var(--accent-primary);
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 42, 109, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 42, 109, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 42, 109, 0); }
+        }
+
+        /* History with gaming style */
+        .chat-history-item {
+            padding: 0.75rem 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-history-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chat-history-item:hover {
+            background-color: var(--bg-tertiary);
+        }
+        
+        .chat-history-item:hover::before {
+            opacity: 1;
+        }
+
+        .chat-history-item.active {
+            background-color: rgba(255, 42, 109, 0.1);
+            color: white;
+            font-weight: 500;
+        }
+        
+        .chat-history-item.active::before {
+            opacity: 1;
+        }
+        
+        /* Buttons with gaming style */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), #d1005e);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 42, 109, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 42, 109, 0.6);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-secondary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(255, 42, 109, 0.3);
+        }
+
+        /* Modal with gaming style */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 15, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: var(--card-shadow);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--accent-primary);
+        }
+
+        .settings-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            color: var(--text-secondary);
+        }
+
+        /* Toggle Switch with gaming style */
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 25px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-tertiary);
+            transition: 0.4s;
+            border-radius: 34px;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 17px;
+            width: 17px;
+            left: 4px;
+            bottom: 3px;
+            background: linear-gradient(135deg, var(--accent-primary), #d1005e);
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 42, 109, 0.5);
+        }
+
+        input:checked + .toggle-slider {
+            background-color: rgba(255, 42, 109, 0.2);
+            border-color: var(--accent-primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary));
+            box-shadow: 0 0 5px rgba(5, 217, 232, 0.5);
+        }
+
+        /* API Key Input Styling */
+        .api-key-input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--text-primary);
+            width: 100%;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .api-key-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: var(--glow-effect);
+        }
+        
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+        
+        .api-status.connected {
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 157, 0.2);
+        }
+        
+        .api-status.disconnected {
+            background-color: rgba(255, 42, 109, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(255, 42, 109, 0.2);
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px rgba(255, 42, 109, 0.5);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 85%;
+                max-width: 300px;
+                transform: translateX(-100%);
+                z-index: 20;
+                box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar:not(.collapsed) { 
+                transform: translateX(0);
+            }
+            
+            .prompt-suggestions {
+                grid-template-columns: 1fr;
+            }
+            
+            .message-bubble {
+                max-width: 90%;
+            }
+            
+            .chat-messages {
+                padding: 0.75rem;
+            }
+            
+            .chat-input-container {
+                padding: 0.75rem;
+            }
+            
+            .header {
+                padding: 0.75rem 1rem;
+            }
+            
+            .welcome-screen {
+                padding: 1.5rem;
+            }
+            
+            .welcome-icon {
+                font-size: 3rem;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            .action-btn {
+                margin: 0.25rem;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 90%;
+            }
+            
+            .message-bubble {
+                max-width: 95%;
+                padding: 0.75rem;
+            }
+            
+            .prompt-card {
+                padding: 1rem;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+            
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            
+            .gaming-badge {
+                font-size: 0.6rem;
+                padding: 0.2rem 0.4rem;
+            }
+            
+            .new-badge {
+                font-size: 0.5rem;
+                padding: 0.15rem 0.3rem;
+            }
+        }
+        
+        /* Additional Gaming Elements */
+        .gaming-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        .new-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffcc00, #ff9900);
+            color: #000;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            animation: pulse 2s infinite;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        .logo-glow {
+            filter: drop-shadow(0 0 8px rgba(255, 42, 109, 0.7));
+        }
+        
+        /* Mobile overlay for sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 15;
+            display: none;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        /* Robotic Logo */
+        .robotic-logo {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .robotic-logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="app-container">
+        <!-- Mobile overlay for sidebar -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        
+        <aside class="sidebar collapsed">
+            <div class="sidebar-header">
+                <div class="flex items-center">
+                    <div class="robotic-logo">B</div>
+                    <h2 class="text-lg font-bold">BEKI AI <span class="gaming-badge">GAMER EDITION</span></h2>
+                </div>
+                <button id="new-chat-btn" class="action-btn" title="New Chat">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-semibold text-gray-500">CHAT HISTORY</h3>
+                        <button id="clear-history-btn" class="text-xs text-gray-500 hover:text-red-500 transition-colors">
+                            Clear All
+                        </button>
+                    </div>
+                    <div id="chat-history-list" class="space-y-1">
+                        <!-- Chat history will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="text-sm font-semibold text-gray-500 mb-2">QUICK ACTIONS</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="prompt-card quick-action" data-prompt="Write a professional email to a client">
+                            <i class="fas fa-envelope text-blue-500 mb-1"></i>
+                            <div class="text-xs font-medium">Email</div>
+                        </div>
+                        <div class="prompt-card quick-action" data-prompt="Explain quantum computing in simple terms">
+                            <i class="fas fa-atom text-purple-500 mb-1"></i>
+                            <div class="text-xs font-medium">Explain</div>
+                        </div>
+                        <div class="prompt-card quick-action" data-prompt="Create a Python function to calculate Fibonacci sequence">
+                            <i class="fas fa-code text-green-500 mb-1"></i>
+                            <div class="text-xs font-medium">Code</div>
+                        </div>
+                        <div class="prompt-card quick-action" data-prompt="Plan a 5-day trip to Tokyo with attractions and food">
+                            <i class="fas fa-map-marked-alt text-yellow-500 mb-1"></i>
+                            <div class="text-xs font-medium">Travel</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="flex items-center mb-4">
+                    <!-- FIXED: Profile avatar with perfect image display -->
+                    <div id="user-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3 cursor-pointer pulse-animation" title="Change Profile Picture">
+                        <span id="user-initials"></span>
+                        <img id="user-avatar-image" class="avatar-image" style="display: none;" alt="User Avatar">
+                    </div>
+                    <input type="file" id="avatar-upload-input" accept="image/*" style="display: none;">
+                    
+                    <div>
+                        <input type="text" id="username-input" class="bg-transparent border-none text-base font-medium p-0 focus:ring-0 focus:outline-none w-full" style="color: var(--text-primary); max-width: 12rem;" value="Gamer User" title="Click to edit name">
+                        <div class="text-xs text-gray-500 flex items-center">
+                            <i class="fas fa-circle text-green-500 text-[0.5rem] mr-1"></i>
+                            Online
+                        </div>
+                    </div>
+                </div>
+                <button id="settings-btn" class="w-full btn-secondary flex items-center justify-center">
+                    <i class="fas fa-cog mr-2"></i>
+                    Settings
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="header">
+                <div class="flex items-center">
+                    <button id="menu-toggle" class="action-btn mr-4">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="text-xl font-bold">BEKI AI Assistant<span class="new-badge">NEW</span></h1>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <button id="theme-toggle" class="action-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="export-chat-btn" class="action-btn" title="Export Chat">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <div class="chat-container">
+                <div class="welcome-screen">
+                    <div class="welcome-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-4">How can I assist you today?</h2>
+                    <p class="text-gray-600 max-w-md mb-8">Ask anything, get instant answers. I can help with writing, coding, analysis, and much more.</p>
+                    
+                    <div class="prompt-suggestions">
+                        <div class="prompt-card" data-prompt="Write a professional email requesting a meeting with a client">
+                            <div class="font-medium mb-1">Write a professional email</div>
+                            <div class="text-sm text-gray-600">Requesting a meeting with a client</div>
+                        </div>
+                        <div class="prompt-card" data-prompt="Explain quantum computing in simple terms for a beginner">
+                            <div class="font-medium mb-1">Explain quantum computing</div>
+                            <div class="text-sm text-gray-600">In simple terms for a beginner</div>
+                        </div>
+                        <div class="prompt-card" data-prompt="Create a Python function to calculate Fibonacci sequence">
+                            <div class="font-medium mb-1">Create a Python function</div>
+                            <div class="text-sm text-gray-600">To calculate Fibonacci sequence</div>
+                        </div>
+                        <div class="prompt-card" data-prompt="Plan a 5-day trip to Tokyo including attractions and food">
+                            <div class="font-medium mb-1">Plan a 5-day trip to Tokyo</div>
+                            <div class="text-sm text-gray-600">Including attractions and food</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-messages" style="display: none;">
+                    <!-- Chat messages will be populated here -->
+                </div>
+                
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <button id="attach-file-btn" class="action-btn" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <textarea id="chat-input" class="chat-input" placeholder="Message BEKI AI..." rows="1"></textarea>
+                        <div class="action-buttons">
+                            <button id="voice-input-btn" class="action-btn" title="Voice input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button id="send-message-btn" class="action-btn send-btn" title="Send message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2 text-center">
+                        BEKI AI can make mistakes. Consider checking important information.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold">Settings <span class="gaming-badge">GAMER EDITION</span></h2>
+                <button class="modal-close" id="close-settings-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="settings-section">
+                <h3>API Configuration</h3>
+                <div class="mb-4">
+                    <div id="api-status" class="api-status connected flex items-center justify-center p-3 rounded-lg">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <span>BEKI AI is connected and ready.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>Appearance</h3>
+                <div class="settings-option">
+                    <span>Dark Mode</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <span>Animations</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="animations-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="mt-4">
+                    <label class="block text-sm font-medium mb-2 text-gray-400">Default Avatar Color</label>
+                    <div id="avatar-color-options" class="flex space-x-2 mb-4">
+                        <!-- Color options will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>Chat Settings</h3>
+                <div class="settings-option">
+                    <span>Auto-save chats</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="autosave-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <span>Typing indicators</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="typing-indicator-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>Data Management</h3>
+                <div class="flex space-x-2">
+                    <button id="export-data-btn" class="btn-secondary flex-1">
+                        <i class="fas fa-download mr-2"></i>
+                        Export Data
+                    </button>
+                    <button id="clear-data-btn" class="btn-secondary flex-1">
+                        <i class="fas fa-trash mr-2"></i>
+                        Clear Data
+                    </button>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h3>About</h3>
+                <p class="text-sm text-gray-600 mb-2">BEKI AI v2.0 <span class="gaming-badge">GAMER EDITION</span></p>
+                <p class="text-sm text-gray-600">Powered by Bereket Mamuye</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-xl font-bold" id="confirm-title">Confirm Action</h2>
+                <button class="modal-close" id="close-confirm-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <p id="confirm-message" class="mb-4">Are you sure you want to perform this action?</p>
+            <div class="flex space-x-2">
+                <button id="confirm-action-btn" class="btn-primary flex-1">Confirm</button>
+                <button id="cancel-action-btn" class="btn-secondary flex-1">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- HARDCODED API KEY FOR DIRECT USE ---
+        const GEMINI_API_KEY = "AIzaSyDGOV2B7ufuZ4_Dmgma6vXJn3kI1bdkTHA";
+        const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
+        // ----------------------------------------
+        
+        const AVATAR_COLORS = ['#ff2a6d', '#05d9e8', '#0059ff', '#ffcc00', '#00ff9d', '#a855f7', '#ec4899', '#0d9488'];
+
+        // App State
+        const state = {
+            currentChatId: null,
+            chats: {},
+            settings: {
+                darkMode: true,
+                animations: true,
+                autosave: true,
+                typingIndicator: true,
+                geminiApiKey: GEMINI_API_KEY 
+            },
+            user: {
+                name: "Gamer User", // Updated default name
+                avatarColor: AVATAR_COLORS[0],
+                avatarImage: null
+            }
+        };
+
+        // DOM Elements
+        const themeToggle = document.getElementById('theme-toggle');
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-message-btn');
+        const chatMessages = document.querySelector('.chat-messages');
+        const welcomeScreen = document.querySelector('.welcome-screen');
+        const promptCards = document.querySelectorAll('.prompt-card');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const clearHistoryBtn = document.getElementById('clear-history-btn');
+        const settingsBtn = document.getElementById('settings-btn');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const animationsToggle = document.getElementById('animations-toggle');
+        const autosaveToggle = document.getElementById('autosave-toggle');
+        const typingIndicatorToggle = document.getElementById('typing-indicator-toggle');
+        const exportDataBtn = document.getElementById('export-data-btn');
+        const clearDataBtn = document.getElementById('clear-data-btn');
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmTitle = document.getElementById('confirm-title');
+        const confirmMessage = document.getElementById('confirm-message');
+        const confirmActionBtn = document.getElementById('confirm-action-btn');
+        const cancelActionBtn = document.getElementById('cancel-action-btn');
+        const closeConfirmBtn = document.getElementById('close-confirm-btn');
+        const chatHistoryList = document.getElementById('chat-history-list');
+        const exportChatBtn = document.getElementById('export-chat-btn');
+        const attachFileBtn = document.getElementById('attach-file-btn');
+        const voiceInputBtn = document.getElementById('voice-input-btn');
+        
+        // Profile Elements
+        const usernameInput = document.getElementById('username-input');
+        const userAvatar = document.getElementById('user-avatar');
+        const userInitials = document.getElementById('user-initials');
+        const userAvatarImage = document.getElementById('user-avatar-image');
+        const avatarColorOptions = document.getElementById('avatar-color-options');
+        const avatarUploadInput = document.getElementById('avatar-upload-input');
+
+        // Initialize the app
+        function initApp() {
+            // Force set API key to hardcoded value
+            state.settings.geminiApiKey = GEMINI_API_KEY; 
+            
+            loadState();
+            renderChatHistory();
+            setupEventListeners();
+            renderColorOptions();
+            
+            // On desktop, the sidebar should be open by default.
+            // On mobile, the sidebar is initially closed by the CSS `transform: -100%`.
+            // We set it to NOT collapsed initially to reflect the desktop state.
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('collapsed');
+            } else {
+                sidebar.classList.add('collapsed');
+            }
+            
+            // Create initial chat if none exists
+            if (Object.keys(state.chats).length === 0) {
+                createNewChat();
+            } else {
+                // Load the most recent chat
+                const chatIds = Object.keys(state.chats);
+                const latestChatId = chatIds[chatIds.length - 1];
+                loadChat(latestChatId);
+            }
+        }
+
+        // Load state from localStorage
+        function loadState() {
+            const savedState = localStorage.getItem('bekiAIState');
+            if (savedState) {
+                const parsed = JSON.parse(savedState);
+                state.chats = parsed.chats || {};
+                // Preserve the hardcoded API key
+                state.settings = {...state.settings, ...parsed.settings, geminiApiKey: GEMINI_API_KEY};
+                
+                // Load user settings, defaulting if not found
+                state.user = {
+                    name: parsed.user?.name || "Gamer User",
+                    avatarColor: parsed.user?.avatarColor || AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)],
+                    avatarImage: parsed.user?.avatarImage || null
+                };
+            }
+            
+            // Apply settings
+            applySettings();
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            localStorage.setItem('bekiAIState', JSON.stringify(state));
+        }
+
+        // Apply settings to UI (including user profile)
+        function applySettings() {
+            // Theme
+            document.body.className = state.settings.darkMode ? 'dark-mode' : 'light-mode';
+            themeToggle.innerHTML = state.settings.darkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            
+            // Update toggle states
+            darkModeToggle.checked = state.settings.darkMode;
+            animationsToggle.checked = state.settings.animations;
+            autosaveToggle.checked = state.settings.autosave;
+            typingIndicatorToggle.checked = state.settings.typingIndicator;
+            
+            // Update User Profile UI
+            updateProfileUI();
+            
+            // Update settings modal inputs when opened
+            renderColorOptions();
+        }
+
+        // Update User Profile elements in sidebar and messages
+        function updateProfileUI() {
+            const initials = getInitials(state.user.name);
+            usernameInput.value = state.user.name; // Update input value
+            userInitials.textContent = initials;
+            userAvatar.style.backgroundColor = state.user.avatarColor;
+            
+            if (state.user.avatarImage) {
+                // Apply the profile picture - FIXED: Perfect image display
+                userAvatarImage.src = state.user.avatarImage;
+                userAvatarImage.style.display = 'block';
+                userInitials.style.display = 'none'; // Hide initials
+                userAvatar.style.backgroundImage = 'none'; // Remove background color
+            } else {
+                // Use initials and color
+                userAvatarImage.style.display = 'none';
+                userInitials.style.display = 'flex'; // Show initials
+                userAvatar.style.backgroundImage = 'none';
+            }
+        }
+
+        // Get initials for the avatar
+        function getInitials(name) {
+            if (!name) return 'G';
+            const parts = name.split(/\s+/).filter(Boolean);
+            if (parts.length > 1) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return parts[0][0].toUpperCase();
+        }
+
+        // Render avatar color options in settings
+        function renderColorOptions() {
+            avatarColorOptions.innerHTML = '';
+            AVATAR_COLORS.forEach(color => {
+                const colorEl = document.createElement('div');
+                colorEl.classList.add('color-option');
+                colorEl.style.backgroundColor = color;
+                colorEl.setAttribute('data-color', color);
+                
+                if (state.user.avatarColor === color) {
+                    colorEl.classList.add('selected');
+                }
+                
+                colorEl.addEventListener('click', () => {
+                    document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+                    colorEl.classList.add('selected');
+                    state.user.avatarColor = color;
+                    state.user.avatarImage = null; // Reset to color when selecting a new color
+                    updateProfileUI(); // Update avatar color immediately
+                    saveState();
+                });
+                
+                avatarColorOptions.appendChild(colorEl);
+            });
+        }
+        
+        // Save User Name directly from the sidebar input
+        function saveUserName() {
+            const newName = usernameInput.value.trim();
+            if (newName.length < 2) {
+                // Revert to old name if invalid
+                usernameInput.value = state.user.name; 
+                return;
+            }
+
+            if (state.user.name !== newName) {
+                state.user.name = newName;
+                updateProfileUI(); // Update avatar initials and input
+                saveState();
+            }
+        }
+        
+        // Handle Profile Picture Upload - FIXED: Perfect image display
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Store as data URL/Base64 string
+                    state.user.avatarImage = e.target.result;
+                    updateProfileUI(); // Apply the new image
+                    saveState();
+                }
+                reader.readAsDataURL(file);
+            }
+            // Clear the input value so the same file can be selected again
+            event.target.value = null; 
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Menu toggle (for desktop and mobile)
+            menuToggle.addEventListener('click', toggleSidebar);
+            
+            // Close sidebar when clicking on overlay (mobile only)
+            sidebarOverlay.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar();
+                }
+            });
+            
+            // Auto-resize textarea
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+            
+            // Send message
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Name editing (on sidebar)
+            usernameInput.addEventListener('blur', saveUserName);
+            usernameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    usernameInput.blur(); // Trigger blur to save
+                }
+            });
+            
+            // Avatar upload
+            userAvatar.addEventListener('click', () => {
+                avatarUploadInput.click();
+            });
+            avatarUploadInput.addEventListener('change', handleAvatarUpload);
+            
+            // Prompt card clicks
+            promptCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const prompt = card.getAttribute('data-prompt');
+                    if (prompt) {
+                        chatInput.value = prompt;
+                        sendMessage();
+                    }
+                });
+            });
+            
+            // New chat button
+            newChatBtn.addEventListener('click', createNewChat);
+            
+            // Clear history button
+            clearHistoryBtn.addEventListener('click', () => {
+                showConfirmModal(
+                    'Clear Chat History',
+                    'Are you sure you want to clear all chat history? This action cannot be undone.',
+                    clearAllChats
+                );
+            });
+            
+            // Settings modal
+            settingsBtn.addEventListener('click', () => {
+                settingsModal.classList.add('active');
+            });
+            
+            closeSettingsBtn.addEventListener('click', () => {
+                settingsModal.classList.remove('active');
+            });
+            
+            // Settings modal - close on outside click (or backdrop click)
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    settingsModal.classList.remove('active');
+                }
+            });
+            
+            // Settings toggles (changes apply automatically via applySettings)
+            darkModeToggle.addEventListener('change', (e) => {
+                state.settings.darkMode = e.target.checked;
+                applySettings();
+                saveState();
+            });
+            
+            animationsToggle.addEventListener('change', (e) => {
+                state.settings.animations = e.target.checked;
+                saveState();
+            });
+            
+            autosaveToggle.addEventListener('change', (e) => {
+                state.settings.autosave = e.target.checked;
+                saveState();
+            });
+            
+            typingIndicatorToggle.addEventListener('change', (e) => {
+                state.settings.typingIndicator = e.target.checked;
+                saveState();
+            });
+            
+            // Data management
+            exportDataBtn.addEventListener('click', exportAllData);
+            clearDataBtn.addEventListener('click', () => {
+                showConfirmModal(
+                    'Clear All Data',
+                    'Are you sure you want to clear all data? This will delete all chats and settings.',
+                    clearAllData
+                );
+            });
+            
+            // Confirmation modal
+            confirmActionBtn.addEventListener('click', executeConfirmedAction);
+            cancelActionBtn.addEventListener('click', closeConfirmModal);
+            closeConfirmBtn.addEventListener('click', closeConfirmModal);
+            
+            // Export chat
+            exportChatBtn.addEventListener('click', exportCurrentChat);
+            
+            // File attachment (simulated)
+            attachFileBtn.addEventListener('click', () => {
+                showModalMessage('Feature Disabled', 'File attachment feature is currently disabled in this demo version.');
+            });
+            
+            // Voice input (simulated)
+            voiceInputBtn.addEventListener('click', () => {
+                showModalMessage('Feature Disabled', 'Voice input feature is currently disabled in this demo version.');
+            });
+        }
+
+        // Toggle sidebar function with mobile support
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            
+            // On mobile, show/hide overlay when sidebar is toggled
+            if (window.innerWidth <= 768) {
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebarOverlay.classList.remove('active');
+                } else {
+                    sidebarOverlay.classList.add('active');
+                }
+            }
+        }
+
+        // Theme toggle function
+        function toggleTheme() {
+            state.settings.darkMode = !state.settings.darkMode;
+            applySettings();
+            saveState();
+        }
+
+        // Create a new chat
+        function createNewChat() {
+            const chatId = 'chat_' + Date.now();
+            state.currentChatId = chatId;
+            
+            state.chats[chatId] = {
+                id: chatId,
+                title: 'New Chat',
+                messages: [],
+                createdAt: new Date().toISOString()
+            };
+            
+            saveState();
+            renderChatHistory();
+            loadChat(chatId);
+            
+            // Hide welcome screen
+            welcomeScreen.style.display = 'none';
+            chatMessages.style.display = 'block';
+            
+            // On mobile, close sidebar after creating new chat
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+
+        // Load a specific chat
+        function loadChat(chatId) {
+            state.currentChatId = chatId;
+            const chat = state.chats[chatId];
+            
+            // Clear current messages
+            chatMessages.innerHTML = '';
+            
+            // Add messages to UI
+            if (chat.messages.length > 0) {
+                chat.messages.forEach(msg => {
+                    addMessageToUI(msg.text, msg.sender, false);
+                });
+            } else {
+                addMessageToUI("Hello! I'm BEKI AI, powered by Gemini. How can I assist you today?", 'ai', false);
+            }
+            
+            // Hide welcome screen
+            welcomeScreen.style.display = 'none';
+            chatMessages.style.display = 'block';
+            
+            // Update chat history active state
+            updateChatHistoryActiveState();
+            
+            // On mobile, close sidebar after loading chat
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+        }
+
+        // Send message function
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message === '') return;
+            
+            // Create new chat if none exists
+            if (!state.currentChatId) {
+                createNewChat();
+            }
+            
+            // Add user message
+            addMessageToUI(message, 'user');
+            saveMessageToChat(message, 'user');
+            
+            // Update chat title with first message
+            if (state.chats[state.currentChatId].messages.length === 1) {
+                state.chats[state.currentChatId].title = message.substring(0, 30) + (message.length > 30 ? '...' : '');
+                renderChatHistory();
+            }
+            
+            // Clear input
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+            
+            // Show typing indicator
+            if (state.settings.typingIndicator) {
+                showTypingIndicator();
+            }
+            
+            // Get AI response from Gemini API
+            try {
+                const aiResponse = await getGeminiResponse(message);
+                removeTypingIndicator();
+                addMessageToUI(aiResponse, 'ai');
+                saveMessageToChat(aiResponse, 'ai');
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('Error getting response from Gemini:', error);
+                const errorMessage = "I'm sorry, I encountered an error while processing your request. This usually means the API key is invalid or has reached its usage limit. Please try again later.";
+                addMessageToUI(errorMessage, 'ai');
+                saveMessageToChat(errorMessage, 'ai');
+            }
+            
+            saveState();
+        }
+
+        // Get response from Gemini API
+        async function getGeminiResponse(userMessage) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+            
+            const chat = state.chats[state.currentChatId];
+            const chatHistory = chat.messages
+                .slice(0, -1) // Exclude the message we just saved and are currently processing
+                .map(msg => ({
+                    role: msg.sender === 'user' ? 'user' : 'model',
+                    parts: [{ text: msg.text }]
+                }));
+
+            // Add the current user message to the history
+            chatHistory.push({ role: 'user', parts: [{ text: userMessage }] });
+
+            const payload = {
+                contents: chatHistory,
+            };
+
+            const response = await fetchWithRetry(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`API request failed with status ${response.status}: ${errorData.error.message || 'Unknown API Error'}`);
+            }
+            
+            const data = await response.json();
+            
+            const candidate = data.candidates?.[0];
+            if (candidate && candidate.content?.parts?.[0]?.text) {
+                return candidate.content.parts[0].text;
+            } else if (candidate?.finishReason === 'SAFETY') {
+                return "I'm sorry, that request was blocked by the safety filter. Please try asking something else.";
+            } else {
+                throw new Error(`No valid response or candidate from Gemini API. Finish reason: ${candidate?.finishReason || 'N/A'}`);
+            }
+        }
+        
+        // Exponential backoff for API retries
+        async function fetchWithRetry(url, options, maxRetries = 3) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.status !== 429 && response.status < 500) {
+                        return response; // Success or non-retryable client error
+                    }
+                    if (i === maxRetries - 1) {
+                        throw new Error(`Request failed after ${maxRetries} attempts with status ${response.status}`);
+                    }
+                    
+                    // Wait before retrying (exponential backoff)
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    // Wait before retrying on network errors
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+
+        // Add message to UI - FIXED: Perfect avatar image display
+        function addMessageToUI(text, sender, animate = true) {
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message', sender);
+            if (animate && state.settings.animations) {
+                messageEl.style.animation = 'fadeIn 0.3s ease';
+            }
+            
+            const avatarEl = document.createElement('div');
+            avatarEl.classList.add('message-avatar');
+            
+            if (sender === 'user') {
+                const initials = getInitials(state.user.name);
+                
+                if (state.user.avatarImage) {
+                    // FIXED: Perfect image display for user avatar
+                    const avatarImg = document.createElement('img');
+                    avatarImg.src = state.user.avatarImage;
+                    avatarImg.classList.add('avatar-image');
+                    avatarEl.appendChild(avatarImg);
+                    avatarEl.style.backgroundColor = 'transparent'; // Remove background color
+                } else {
+                    // Use initials and color
+                    avatarEl.textContent = initials;
+                    avatarEl.style.backgroundColor = state.user.avatarColor;
+                }
+                
+            } else {
+                // AI avatar - using icon instead of image
+                avatarEl.innerHTML = '<i class="fas fa-robot"></i>';
+                avatarEl.style.backgroundImage = 'none';
+            }
+            
+            const bubbleEl = document.createElement('div');
+            bubbleEl.classList.add('message-bubble');
+            
+            if (sender === 'ai') {
+                bubbleEl.innerHTML = marked.parse(text);
+                
+                setTimeout(() => {
+                    document.querySelectorAll('pre code').forEach((block) => {
+                        Prism.highlightElement(block);
+                    });
+                }, 0);
+            } else {
+                bubbleEl.textContent = text;
+            }
+            
+            messageEl.appendChild(avatarEl);
+            messageEl.appendChild(bubbleEl);
+            
+            chatMessages.appendChild(messageEl);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Save message to current chat
+        function saveMessageToChat(text, sender) {
+            if (state.currentChatId && state.chats[state.currentChatId]) {
+                state.chats[state.currentChatId].messages.push({
+                    text,
+                    sender,
+                    timestamp: new Date().toISOString()
+                });
+                
+                if (state.settings.autosave) {
+                    saveState();
+                }
+            }
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const typingEl = document.createElement('div');
+            typingEl.classList.add('typing-indicator');
+            typingEl.id = 'typing-indicator';
+            
+            typingEl.innerHTML = `
+                <div class="message-avatar" style="background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary)); color: white;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(typingEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const typingEl = document.getElementById('typing-indicator');
+            if (typingEl) {
+                typingEl.remove();
+            }
+        }
+        
+        // Custom message modal (replacing alerts)
+        function showModalMessage(title, message) {
+            confirmTitle.textContent = title;
+            confirmMessage.textContent = message;
+            confirmActionBtn.style.display = 'none';
+            cancelActionBtn.textContent = 'Close';
+            
+            confirmedAction = () => {
+                confirmActionBtn.style.display = 'block';
+                cancelActionBtn.textContent = 'Cancel';
+            };
+            
+            confirmModal.classList.add('active');
+        }
+
+        // Render chat history list
+        function renderChatHistory() {
+            chatHistoryList.innerHTML = '';
+            
+            const chatIds = Object.keys(state.chats);
+            if (chatIds.length === 0) {
+                chatHistoryList.innerHTML = '<div class="text-center text-gray-500 py-4">No chats yet</div>';
+                return;
+            }
+            
+            const sortedChats = chatIds
+                .map(id => state.chats[id])
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            sortedChats.forEach(chat => {
+                const chatEl = document.createElement('div');
+                chatEl.classList.add('chat-history-item');
+                chatEl.setAttribute('data-chat-id', chat.id);
+                if (chat.id === state.currentChatId) {
+                    chatEl.classList.add('active');
+                }
+                
+                // Make the chat title editable
+                chatEl.innerHTML = `
+                    <div class="flex justify-between items-center w-full">
+                        <div 
+                            class="truncate flex-1 font-medium text-sm hover:bg-[var(--bg-tertiary)] px-1 -mx-1 rounded" 
+                            contenteditable="true" 
+                            data-original-title="${chat.title}"
+                            title="Click to rename chat"
+                        >${chat.title}</div>
+                        <div class="text-xs text-gray-500 ml-2 flex-shrink-0">${formatDate(chat.createdAt)}</div>
+                    </div>
+                `;
+                
+                const titleEl = chatEl.querySelector('[contenteditable="true"]');
+                if (titleEl) {
+                    // Save on blur
+                    titleEl.addEventListener('blur', (e) => saveChatTitle(e, chat.id));
+                    // Save on Enter key press
+                    titleEl.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            titleEl.blur(); // Trigger blur to save
+                        }
+                    });
+                }
+                
+                chatEl.addEventListener('click', (e) => {
+                    // Only load chat if the click target is not the editable title element
+                    if (e.target !== titleEl) {
+                        loadChat(chat.id);
+                    }
+                });
+                
+                chatHistoryList.appendChild(chatEl);
+            });
+        }
+        
+        // Function to save the edited chat title
+        function saveChatTitle(event, chatId) {
+            const newTitle = event.target.textContent.trim();
+            const originalTitle = event.target.getAttribute('data-original-title');
+            
+            if (newTitle === "" || newTitle === originalTitle) {
+                event.target.textContent = originalTitle; // Revert if empty
+                return;
+            }
+            
+            if (state.chats[chatId]) {
+                state.chats[chatId].title = newTitle;
+                event.target.setAttribute('data-original-title', newTitle); // Update original
+                saveState();
+            }
+        }
+
+        // Update active state in chat history
+        function updateChatHistoryActiveState() {
+            document.querySelectorAll('.chat-history-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (state.currentChatId) {
+                const activeItem = document.querySelector(`[data-chat-id="${state.currentChatId}"]`);
+                if (activeItem) {
+                    activeItem.classList.add('active');
+                }
+            }
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) {
+                return 'Today';
+            } else if (diffDays === 1) {
+                return 'Yesterday';
+            } else if (diffDays < 7) {
+                return `${diffDays}d ago`;
+            } else {
+                return date.toLocaleDateString();
+            }
+        }
+
+        // Show confirmation modal
+        let confirmedAction = null;
+        function showConfirmModal(title, message, action) {
+            confirmTitle.textContent = title;
+            confirmMessage.textContent = message;
+            confirmedAction = action;
+            confirmActionBtn.style.display = 'block';
+            cancelActionBtn.textContent = 'Cancel';
+            confirmModal.classList.add('active');
+        }
+
+        // Execute confirmed action
+        function executeConfirmedAction() {
+            if (confirmedAction) {
+                confirmedAction();
+            }
+            closeConfirmModal();
+        }
+
+        // Close confirmation modal
+        function closeConfirmModal() {
+            confirmModal.classList.remove('active');
+            confirmedAction = null;
+        }
+
+        // Clear all chats
+        function clearAllChats() {
+            state.chats = {};
+            state.currentChatId = null;
+            saveState();
+            renderChatHistory();
+            
+            // Show welcome screen
+            welcomeScreen.style.display = 'flex';
+            chatMessages.style.display = 'none';
+            chatMessages.innerHTML = '';
+        }
+
+        // Clear all data
+        function clearAllData() {
+            state.chats = {};
+            state.currentChatId = null;
+            state.settings = {
+                darkMode: true,
+                animations: true,
+                autosave: true,
+                typingIndicator: true,
+                geminiApiKey: GEMINI_API_KEY
+            };
+            state.user = {
+                name: "Gamer User",
+                avatarColor: AVATAR_COLORS[0],
+                avatarImage: null
+            };
+            
+            localStorage.removeItem('bekiAIState');
+            applySettings();
+            renderChatHistory();
+            
+            // Show welcome screen
+            welcomeScreen.style.display = 'flex';
+            chatMessages.style.display = 'none';
+            chatMessages.innerHTML = '';
+        }
+
+        // Export all data
+        function exportAllData() {
+            const dataStr = JSON.stringify(state, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `beki-ai-data-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // Export current chat
+        function exportCurrentChat() {
+            if (!state.currentChatId || !state.chats[state.currentChatId]) {
+                showModalMessage('No Chat', 'No active chat to export.');
+                return;
+            }
+            
+            const chat = state.chats[state.currentChatId];
+            const chatText = chat.messages
+                .map(msg => `${msg.sender === 'user' ? state.user.name : 'BEKI AI'}: ${msg.text}`)
+                .join('\n\n');
+            
+            const dataBlob = new Blob([chatText], {type: 'text/plain'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `beki-ai-chat-${chat.title.replace(/\s+/g, '-').toLowerCase()}.txt`;
+            link.click();
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
